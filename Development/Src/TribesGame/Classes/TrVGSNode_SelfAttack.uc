@@ -1,0 +1,48 @@
+class TrVGSNode_SelfAttack extends TrVGSNode;
+
+defaultproperties
+{
+   m_KeyBind="A"
+   m_MenuString="Attack"
+   m_Commands(0)=VGSCommandType_SelfAttack
+   m_Commands(1)=VGSCommandType_SelfAttackBase
+   m_Commands(2)=VGSCommandType_SelfAttackFlag
+   m_Commands(3)=VGSCommandType_SelfAttackGenerator
+   m_Commands(4)=VGSCommandType_SelfAttackSensors
+   m_Commands(5)=VGSCommandType_SelfAttackTurrets
+   m_Commands(6)=VGSCommandType_SelfAttackVehicle
+   m_Commands(7)=VGSCommandType_SelfAttackPointA
+   m_Commands(8)=VGSCommandType_SelfAttackPointB
+   m_Commands(9)=VGSCommandType_SelfAttackPointC
+   m_Commands(10)=VGSCommandType_SelfAttackPointD
+   m_Commands(11)=VGSCommandType_SelfAttackPointE
+   m_IgnoreCTFCommand(0)=VGSCommandType_SelfAttackPointA
+   m_IgnoreCTFCommand(1)=VGSCommandType_SelfAttackPointB
+   m_IgnoreCTFCommand(2)=VGSCommandType_SelfAttackPointC
+   m_IgnoreCTFCommand(3)=VGSCommandType_SelfAttackPointD
+   m_IgnoreCTFCommand(4)=VGSCommandType_SelfAttackPointE
+   m_IgnoreTeamRabbitCommand(0)=VGSCommandType_SelfAttackPointA
+   m_IgnoreTeamRabbitCommand(1)=VGSCommandType_SelfAttackPointB
+   m_IgnoreTeamRabbitCommand(2)=VGSCommandType_SelfAttackPointC
+   m_IgnoreTeamRabbitCommand(3)=VGSCommandType_SelfAttackPointD
+   m_IgnoreTeamRabbitCommand(4)=VGSCommandType_SelfAttackPointE
+   m_IgnoreTeamRabbitCommand(5)=VGSCommandType_SelfAttackBase
+   m_IgnoreTeamRabbitCommand(6)=VGSCommandType_SelfAttackGenerator
+   m_IgnoreTeamRabbitCommand(7)=VGSCommandType_SelfAttackSensors
+   m_IgnoreTeamRabbitCommand(8)=VGSCommandType_SelfAttackVehicle
+   m_IgnoreArenaCommand(0)=VGSCommandType_SelfAttackPointA
+   m_IgnoreArenaCommand(1)=VGSCommandType_SelfAttackPointB
+   m_IgnoreArenaCommand(2)=VGSCommandType_SelfAttackPointC
+   m_IgnoreArenaCommand(3)=VGSCommandType_SelfAttackPointD
+   m_IgnoreArenaCommand(4)=VGSCommandType_SelfAttackPointE
+   m_IgnoreArenaCommand(5)=VGSCommandType_SelfAttackBase
+   m_IgnoreArenaCommand(6)=VGSCommandType_SelfAttackFlag
+   m_IgnoreArenaCommand(7)=VGSCommandType_SelfAttackGenerator
+   m_IgnoreArenaCommand(8)=VGSCommandType_SelfAttackSensors
+   m_IgnoreArenaCommand(9)=VGSCommandType_SelfAttackVehicle
+   m_IgnoreCaHCommand(0)=VGSCommandType_SelfAttackBase
+   m_IgnoreCaHCommand(1)=VGSCommandType_SelfAttackFlag
+   m_IgnoreCaHCommand(2)=VGSCommandType_SelfAttackGenerator
+   Name="Default__TrVGSNode_SelfAttack"
+   ObjectArchetype=TrVGSNode'TribesGame.Default__TrVGSNode'
+}

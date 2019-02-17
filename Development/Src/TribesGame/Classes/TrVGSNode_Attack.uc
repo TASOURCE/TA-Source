@@ -1,0 +1,54 @@
+class TrVGSNode_Attack extends TrVGSNode;
+
+defaultproperties
+{
+   m_KeyBind="A"
+   m_MenuString="Attack"
+   m_Commands(0)=VGSCommandType_Attack
+   m_Commands(1)=VGSCommandType_AttackBase
+   m_Commands(2)=VGSCommandType_AttackChase
+   m_Commands(3)=VGSCommandType_AttackDisrupt
+   m_Commands(4)=VGSCommandType_AttackFlag
+   m_Commands(5)=VGSCommandType_AttackGenerator
+   m_Commands(6)=VGSCommandType_AttackReinforce
+   m_Commands(7)=VGSCommandType_AttackSensors
+   m_Commands(8)=VGSCommandType_AttackTurrets
+   m_Commands(9)=VGSCommandType_AttackVehicle
+   m_Commands(10)=VGSCommandType_AttackWait
+   m_Commands(11)=VGSCommandType_AttackPointA
+   m_Commands(12)=VGSCommandType_AttackPointB
+   m_Commands(13)=VGSCommandType_AttackPointC
+   m_Commands(14)=VGSCommandType_AttackPointD
+   m_Commands(15)=VGSCommandType_AttackPointE
+   m_IgnoreCTFCommand(0)=VGSCommandType_AttackPointA
+   m_IgnoreCTFCommand(1)=VGSCommandType_AttackPointB
+   m_IgnoreCTFCommand(2)=VGSCommandType_AttackPointC
+   m_IgnoreCTFCommand(3)=VGSCommandType_AttackPointD
+   m_IgnoreCTFCommand(4)=VGSCommandType_AttackPointE
+   m_IgnoreTeamRabbitCommand(0)=VGSCommandType_AttackPointA
+   m_IgnoreTeamRabbitCommand(1)=VGSCommandType_AttackPointB
+   m_IgnoreTeamRabbitCommand(2)=VGSCommandType_AttackPointC
+   m_IgnoreTeamRabbitCommand(3)=VGSCommandType_AttackPointD
+   m_IgnoreTeamRabbitCommand(4)=VGSCommandType_AttackPointE
+   m_IgnoreTeamRabbitCommand(5)=VGSCommandType_AttackBase
+   m_IgnoreTeamRabbitCommand(6)=VGSCommandType_AttackGenerator
+   m_IgnoreTeamRabbitCommand(7)=VGSCommandType_AttackSensors
+   m_IgnoreTeamRabbitCommand(8)=VGSCommandType_AttackVehicle
+   m_IgnoreArenaCommand(0)=VGSCommandType_AttackPointA
+   m_IgnoreArenaCommand(1)=VGSCommandType_AttackPointB
+   m_IgnoreArenaCommand(2)=VGSCommandType_AttackPointC
+   m_IgnoreArenaCommand(3)=VGSCommandType_AttackPointD
+   m_IgnoreArenaCommand(4)=VGSCommandType_AttackPointE
+   m_IgnoreArenaCommand(5)=VGSCommandType_AttackBase
+   m_IgnoreArenaCommand(6)=VGSCommandType_AttackChase
+   m_IgnoreArenaCommand(7)=VGSCommandType_AttackFlag
+   m_IgnoreArenaCommand(8)=VGSCommandType_AttackGenerator
+   m_IgnoreArenaCommand(9)=VGSCommandType_AttackSensors
+   m_IgnoreArenaCommand(10)=VGSCommandType_AttackVehicle
+   m_IgnoreCaHCommand(0)=VGSCommandType_AttackBase
+   m_IgnoreCaHCommand(1)=VGSCommandType_AttackChase
+   m_IgnoreCaHCommand(2)=VGSCommandType_AttackFlag
+   m_IgnoreCaHCommand(3)=VGSCommandType_AttackGenerator
+   Name="Default__TrVGSNode_Attack"
+   ObjectArchetype=TrVGSNode'TribesGame.Default__TrVGSNode'
+}

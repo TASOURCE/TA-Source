@@ -1,0 +1,35 @@
+class TrFamilyInfo_Heavy_Rook extends TrFamilyInfo_Heavy
+    abstract;
+
+defaultproperties
+{
+   DevSelectionList(0)=(EquipPoint=EQP_LaserTarget,DeviceClass=Class'TribesGame.TrDevice_LaserTargeter',ContentDeviceClassString="TribesGameContent.TrDevice_LaserTargeter_Content")
+   DevSelectionList(1)=(EquipPoint=EQP_Primary,DeviceClass=Class'TribesGame.TrDevice_HeavyBoltLauncher',ContentDeviceClassString="TribesGameContent.TrDevice_HeavyBoltLauncher_Content")
+   DevSelectionList(2)=(EquipPoint=EQP_Secondary,DeviceClass=Class'TribesGame.TrDevice_NovaSlug',ContentDeviceClassString="TribesGameContent.TrDevice_NovaSlug_Content")
+   DevSelectionList(3)=(EquipPoint=EQP_Pack,DeviceClass=Class'TribesGame.TrDevice_ShieldPack')
+   DevSelectionList(4)=(EquipPoint=EQP_Belt,DeviceClass=Class'TribesGame.TrDevice_Mine',ContentDeviceClassString="TribesGameContent.TrDevice_Mine_Content")
+   m_vAirControlMultiplier=(X=3.700000,Y=0.400000)
+   m_fFlightAcceleration=110.000000
+   m_fJetpackInitAccelMultiplier=1000.000000
+   m_fJetpackInitTotalTime=1.800000
+   r_fMaxPowerPool=80.000000
+   m_fPowerPoolRechargeRate=9.000000
+   m_fMaxGroundSpeed=300.000000
+   m_nMaxHealthPool=2400.000000
+   ClassId=1690
+   InfoBit=16384
+   Stat_Range=42.000000
+   Stat_Mobility=25.000000
+   Stat_AntiArmor=55.000000
+   Stat_Difficulty=60.000000
+   Stat_Durability=98.000000
+   m_fMass=130.000000
+   m_fFIMaxJettingSpeed=8000.000000
+   m_fFITerminalJettingSpeed=9000.000000
+   m_fFIMaxSkiSpeed=2000.000000
+   m_fFITerminalSkiSpeed=2500.000000
+   m_IconId=60
+   m_IconColor=10835489
+   Name="Default__TrFamilyInfo_Heavy_Rook"
+   ObjectArchetype=TrFamilyInfo_Heavy'TribesGame.Default__TrFamilyInfo_Heavy'
+}

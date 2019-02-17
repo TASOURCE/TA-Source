@@ -1,0 +1,29 @@
+class TrFamilyInfo_Light_Jumper extends TrFamilyInfo_Light
+    abstract;
+
+defaultproperties
+{
+   DevSelectionList(0)=(EquipPoint=EQP_LaserTarget,DeviceClass=Class'TribesGame.TrDevice_LaserTargeter',ContentDeviceClassString="TribesGameContent.TrDevice_LaserTargeter_Content")
+   DevSelectionList(1)=(EquipPoint=EQP_Primary,DeviceClass=Class'TribesGame.TrDevice_BoltLauncher',ContentDeviceClassString="TribesGameContent.TrDevice_BoltLauncher_Content")
+   DevSelectionList(2)=(EquipPoint=EQP_Secondary,DeviceClass=Class'TribesGame.TrDevice_SawedOffShotgun',ContentDeviceClassString="TribesGameContent.TrDevice_SawedOffShotgun_Content")
+   DevSelectionList(3)=(EquipPoint=EQP_Pack,DeviceClass=Class'TribesGame.TrDevice_Blink')
+   DevSelectionList(4)=(EquipPoint=EQP_Belt,DeviceClass=Class'TribesGame.TrDevice_STGrenade',ContentDeviceClassString="TribesGameContent.TrDevice_STGrenade_Content")
+   m_vAirControlMultiplier=(X=3.700000,Y=1.400000)
+   m_fMaxGroundSpeed=500.000000
+   m_nMaxHealthPool=800.000000
+   ClassId=1696
+   InfoBit=2
+   Stat_Range=35.000000
+   Stat_Mobility=95.000000
+   Stat_AntiArmor=15.000000
+   Stat_Difficulty=45.000000
+   Stat_Durability=15.000000
+   m_fFIMaxJettingSpeed=8000.000000
+   m_fFITerminalJettingSpeed=9000.000000
+   m_fFIMaxSkiSpeed=1900.000000
+   m_fFITerminalSkiSpeed=2400.000000
+   m_IconId=3
+   m_IconColor=6208316
+   Name="Default__TrFamilyInfo_Light_Jumper"
+   ObjectArchetype=TrFamilyInfo_Light'TribesGame.Default__TrFamilyInfo_Light'
+}
