@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!-- <GameSettings XGDFileRelativePath="..\..\MyGame\Build\DVD-Layout.xgd"> -->
+<GameSettings>
+  <SyncPaths>
+    <PathInfo Path="Binaries\" Wildcard="%GAME%.exe" bIsRecursive="false" bIsForTarget="true" />
+    <PathInfo Path="Binaries\" Wildcard="%GAME%.com" bIsRecursive="false" bIsForTarget="true" />
+    <PathInfo Path="Binaries\" Wildcard="%GAME%_RunSeekfree.bat" bIsRecursive="false" bIsForTarget="true" />
+    <PathInfo Path="Binaries\Lib\Release\" Wildcard="%GAME%.pdb" bIsRecursive="true" bIsForTarget="false" />
+  </SyncPaths>
+</GameSettings>
