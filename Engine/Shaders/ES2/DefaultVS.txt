@@ -1,0 +1,22 @@
+/**
+ * Copyright 1998-2010 Epic Games, Inc. All Rights Reserved.
+ */
+
+uniform mat4 LocalToWorld;
+uniform mat4 ViewProjection;
+uniform vec4 LightmapCoordinateScaleBias;
+
+attribute vec4 Position;
+attribute vec2 TexCoords0;
+attribute vec2 LightMapCoordinate;
+
+varying vec2 UVBase;
+varying vec2 UVLightmap;
+
+void main()
+{
+    vec4 p = LocalToWorld * Position;
+    gl_Position = ViewProjection * p;
+    UVBase = TexCoords0;
+    UVLightmap = LightMapCoordinate * LightmapCoordinateScaleBias.xy + LightmapCoordinateScaleBias.wz;
+}

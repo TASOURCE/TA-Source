@@ -1,0 +1,23 @@
+/**
+ * Copyright 1998-2010 Epic Games, Inc. All Rights Reserved.
+ */
+
+uniform sampler2D TextureBase;
+
+varying vec4 Interp_TexCoord;
+varying lowp vec4 Interp_Color;
+varying lowp float Interp_BlendAlpha;
+
+void main()
+{
+    lowp vec4 BaseColor1 = texture2D(TextureBase, Interp_TexCoord.xy);
+    lowp vec4 BaseColor2 = texture2D(TextureBase, Interp_TexCoord.zw);
+	lowp vec4 BaseColor = mix(BaseColor1, BaseColor2, Interp_BlendAlpha);
+	
+	// alpha kill if enabled
+	ALPHAKILL(BaseColor.w)
+
+	BaseColor *= Interp_Color;
+    gl_FragColor = BaseColor;
+}
+

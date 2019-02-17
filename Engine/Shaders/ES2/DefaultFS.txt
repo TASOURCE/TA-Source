@@ -1,0 +1,23 @@
+/**
+ * Copyright 1998-2010 Epic Games, Inc. All Rights Reserved.
+ */
+
+uniform vec4 LightMapScale;
+uniform sampler2D TextureBase;
+uniform sampler2D TextureLightmap;
+
+varying vec2 UVBase;
+varying vec2 UVLightmap;
+
+void main()
+{
+    lowp vec4 BaseColor = texture2D(TextureBase, UVBase);
+	
+	ALPHAKILL(BaseColor.w)
+	
+    lowp vec4 LightmapColor = texture2D(TextureLightmap, UVLightmap) * vec4(LightMapScale.xyz, 1);
+//    vec4 LightmapColor = texture2D(TextureLightmap, UVLightmap);
+//    vec4 LightmapColor = texture2D(TextureLightmap, gl_FragCoord.xy * vec2(1.0/320.0, 1.0/480.0));
+    gl_FragColor = LightmapColor * BaseColor;
+}
+

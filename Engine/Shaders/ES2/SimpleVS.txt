@@ -1,0 +1,20 @@
+/**
+ * Copyright 1998-2010 Epic Games, Inc. All Rights Reserved.
+ */
+
+uniform mat4 Transform;
+
+attribute vec4 Position;
+attribute vec2 TexCoords0;
+attribute vec4 Color;
+
+varying vec2 UVBase;
+varying lowp vec4 PrimColor;
+
+
+void main()
+{
+	gl_Position = Transform * Position;
+	UVBase = TexCoords0;
+	PrimColor = Color;
+}

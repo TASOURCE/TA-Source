@@ -1,0 +1,46 @@
+/**
+ * Copyright 1998-2010 Epic Games, Inc. All Rights Reserved.
+ */
+
+uniform mat4 LocalToWorld;
+uniform mat4 ViewProjection;
+
+#define MAX_BONES 75
+uniform vec4 BoneMatrices[MAX_BONES * 3];
+
+attribute vec4 Position;
+attribute vec4 BlendWeight;
+attribute vec4 BlendIndices;
+
+void main()
+{
+	// compute the bone matrix
+	ivec4 BlendIndicesInt = ivec4(BlendIndices);
+	vec4 BoneMatR0 = BoneMatrices[BlendIndicesInt.x * 3 + 0] * BlendWeight.x;
+	vec4 BoneMatR1 = BoneMatrices[BlendIndicesInt.x * 3 + 1] * BlendWeight.x;
+	vec4 BoneMatR2 = BoneMatrices[BlendIndicesInt.x * 3 + 2] * BlendWeight.x;
+
+	BoneMatR0 += BoneMatrices[BlendIndicesInt.y * 3 + 0] * BlendWeight.y;
+	BoneMatR1 += BoneMatrices[BlendIndicesInt.y * 3 + 1] * BlendWeight.y;
+	BoneMatR2 += BoneMatrices[BlendIndicesInt.y * 3 + 2] * BlendWeight.y;
+
+	BoneMatR0 += BoneMatrices[BlendIndicesInt.z * 3 + 0] * BlendWeight.z;
+	BoneMatR1 += BoneMatrices[BlendIndicesInt.z * 3 + 1] * BlendWeight.z;
+	BoneMatR2 += BoneMatrices[BlendIndicesInt.z * 3 + 2] * BlendWeight.z;
+
+	BoneMatR0 += BoneMatrices[BlendIndicesInt.w * 3 + 0] * BlendWeight.w;
+	BoneMatR1 += BoneMatrices[BlendIndicesInt.w * 3 + 1] * BlendWeight.w;
+	BoneMatR2 += BoneMatrices[BlendIndicesInt.w * 3 + 2] * BlendWeight.w;
+
+	// combine LocalToWorld with the transposed BoneMat (which was flipped for mat4x3 action)
+	mat4 BoneToWorld = LocalToWorld * mat4(
+		BoneMatR0[0], BoneMatR1[0], BoneMatR2[0], 0.0,
+		BoneMatR0[1], BoneMatR1[1], BoneMatR2[1], 0.0,
+		BoneMatR0[2], BoneMatR1[2], BoneMatR2[2], 0.0,
+		BoneMatR0[3], BoneMatR1[3], BoneMatR2[3], 1.0
+	);
+
+	// calculate position in world space and put it into view space
+	vec4 VertWorldPos = BoneToWorld * Position;
+	gl_Position = ViewProjection * VertWorldPos;
+}

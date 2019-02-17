@@ -1,0 +1,76 @@
+/**
+ * Copyright 1998-2010 Epic Games, Inc. All Rights Reserved.
+ */
+
+uniform mat4 LocalToWorld;
+uniform mat4 ViewProjection;
+uniform vec4 CameraWorldPosition;
+uniform vec4 CameraRight;
+uniform vec4 CameraUp;
+//uniform vec4 ScreenAlignment;
+uniform float AxisRotationVectorSourceIndex;
+uniform vec4 AxisRotationVectors[2];
+uniform vec3 ParticleUpRightResultScalars;
+
+attribute vec4 Position;
+attribute vec4 OldPosition;
+attribute vec3 Size;
+attribute float Rotation;
+attribute vec2 TexCoord;
+attribute vec4 ParticleColor;
+
+varying vec2 Interp_TexCoord;
+varying lowp vec4 Interp_Color;
+
+vec3 SafeNormalize(vec3 V)
+{
+	return V / sqrt(max(dot(V, V), 0.01));
+}
+
+void main()
+{
+    vec4 Pos = LocalToWorld * Position;
+	vec4 OldPos = LocalToWorld * OldPosition;
+
+	vec3 CameraDirection = SafeNormalize(CameraWorldPosition.xyz - Pos.xyz);
+	vec3 ParticleDirection = SafeNormalize(Pos.xyz - OldPos.xyz);
+	
+	vec4 Right_Square = CameraRight;
+	vec4 Up_Square = CameraUp;
+	
+	vec4 Right_Rotated = (-1.0 * cos(Rotation) * Up_Square) + (sin(Rotation) * Right_Square);
+	vec4 Up_Rotated = (sin(Rotation) * Up_Square) + (cos(Rotation) * Right_Square);
+	
+	vec4 Right_Velocity = vec4(SafeNormalize(cross(CameraDirection, ParticleDirection)), 0.0);
+	vec4 Up_Velocity = vec4(-ParticleDirection, 0.0);
+	
+	vec4 AxisRotationResultVectors[2];
+	int ARVIndex = int(AxisRotationVectorSourceIndex);
+	vec4 AxisSource = AxisRotationVectors[ARVIndex];
+	
+	vec4 Axis_Calculation = vec4(SafeNormalize(cross(CameraDirection, AxisSource.xyz)), 0.0) * AxisSource.w;
+	
+	AxisRotationResultVectors[0] = (ARVIndex != 0) ? Axis_Calculation : AxisSource;
+	AxisRotationResultVectors[1] = (ARVIndex == 0) ? Axis_Calculation : AxisSource;
+	
+	AxisRotationResultVectors[0].w = 0.0;
+	AxisRotationResultVectors[1].w = 0.0;
+	
+	vec4 Right =	(Right_Rotated * ParticleUpRightResultScalars.x) + 
+					(Right_Velocity * ParticleUpRightResultScalars.y) + 
+					(AxisRotationResultVectors[0] * ParticleUpRightResultScalars.z);
+
+	vec4 Up =		(Up_Rotated * ParticleUpRightResultScalars.x) + 
+					(Up_Velocity * ParticleUpRightResultScalars.y) + 
+					(AxisRotationResultVectors[1] * ParticleUpRightResultScalars.z);
+				 
+	Pos =			Pos +
+					Size.x * (TexCoord.x - 0.5) * Right +
+					Size.y * (TexCoord.y - 0.5) * Up;
+
+	gl_Position = ViewProjection * Pos;
+
+		
+    Interp_TexCoord = TexCoord;
+    Interp_Color = ParticleColor;
+}

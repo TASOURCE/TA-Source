@@ -1,0 +1,18 @@
+/**
+ * Copyright 1998-2010 Epic Games, Inc. All Rights Reserved.
+ */
+
+uniform mat4 LocalToWorld;
+uniform mat4 ViewProjection;
+
+attribute vec4 Position;
+attribute vec2 TexCoords0;
+
+varying vec2 UVBase;
+
+void main()
+{
+    vec4 p = LocalToWorld * Position;
+    gl_Position = ViewProjection * p;
+    UVBase = TexCoords0;
+}

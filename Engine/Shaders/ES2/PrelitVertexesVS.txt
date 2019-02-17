@@ -1,0 +1,22 @@
+/**
+ * Copyright 1998-2010 Epic Games, Inc. All Rights Reserved.
+ */
+
+uniform mat4 LocalToWorld;
+uniform mat4 ViewProjection;
+uniform lowp vec4 LightMapScale;
+
+attribute vec4 Position;
+attribute vec2 TexCoords0;
+attribute lowp vec4 LightMapA;
+
+varying vec2 UVBase;
+varying lowp vec4 PrelitColor;
+
+void main()
+{
+    vec4 p = LocalToWorld * Position;
+    gl_Position = ViewProjection * p;
+    UVBase = TexCoords0;
+    PrelitColor = LightMapA.zyxw * LightMapScale;
+}

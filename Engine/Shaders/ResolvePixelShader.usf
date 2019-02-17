@@ -1,0 +1,77 @@
+/*=============================================================================
+	ResolvePixelShader.usf: Resolve pixel shader source.
+	Copyright 1998-2011 Epic Games, Inc. All Rights Reserved.
+=============================================================================*/
+
+#include "Common.usf"
+
+#if SM5_PROFILE
+
+Texture2DMS<float4> UnresolvedSurface;
+
+void MainColorAndDepth(
+	float2 InUV : TEXCOORD0,
+	out float4 OutColor : COLOR0
+	)
+{
+	float2 SurfaceDimensions;
+	int NumSurfaceSamples;
+	UnresolvedSurface.GetDimensions(SurfaceDimensions.x,SurfaceDimensions.y,NumSurfaceSamples);
+
+	int2 IntUV = floor(InUV);
+
+	// Compute the average color and maximum depth of all samples.
+	// Note that maximum depth actually means closest depth, since 1/depth is stored.
+	float3 AveragedColor = 0;
+	float MaxDepth = 0;
+	for(int SampleIndex = 0;SampleIndex < NumSurfaceSamples;++SampleIndex)
+	{
+		float4 Sample = UnresolvedSurface.Load(IntUV,SampleIndex);
+		AveragedColor += Sample.rgb;
+		MaxDepth = max(MaxDepth,Sample.w);
+	}
+	AveragedColor /= NumSurfaceSamples;
+
+	OutColor = float4(AveragedColor,MaxDepth);
+}
+
+void MainFarDepth(
+	float2 InUV : TEXCOORD0,
+	out float4 OutColor : COLOR0
+	)
+{
+	float2 SurfaceDimensions;
+	int NumSurfaceSamples;
+	UnresolvedSurface.GetDimensions(SurfaceDimensions.x,SurfaceDimensions.y,NumSurfaceSamples);
+
+	int2 IntUV = floor(InUV);
+
+	// Compute the minimum depth of all samples.
+	// Note that minimum depth actually means farthest depth, since 1/depth is stored.
+	float MinDepth = 100000;
+	for(int SampleIndex = 0;SampleIndex < NumSurfaceSamples;++SampleIndex)
+	{
+		float4 Sample = UnresolvedSurface.Load(IntUV,SampleIndex);
+		MinDepth = min(MinDepth,Sample.w);
+	}
+
+	OutColor = MinDepth;
+}
+
+uint SingleSampleIndex;
+
+void MainSingleSample(
+	float2 InUV : TEXCOORD0,
+	out float4 OutColor : COLOR0
+	)
+{
+	float2 SurfaceDimensions;
+	int NumSurfaceSamples;
+	UnresolvedSurface.GetDimensions(SurfaceDimensions.x,SurfaceDimensions.y,NumSurfaceSamples);
+
+	int2 IntUV = floor(InUV);
+
+	OutColor = UnresolvedSurface.Load(IntUV,SingleSampleIndex);
+}
+
+#endif

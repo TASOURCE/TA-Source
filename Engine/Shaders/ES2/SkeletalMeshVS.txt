@@ -1,0 +1,80 @@
+/**
+ * Copyright 1998-2010 Epic Games, Inc. All Rights Reserved.
+ */
+
+uniform mat4 LocalToWorld;
+uniform mat4 ViewProjection;
+uniform vec4 LightColorAndFalloffExponent;
+uniform vec4 LowerSkyColor;
+uniform vec4 UpperSkyColor;
+uniform vec4 CameraWorldPosition;
+
+#define MAX_BONES 75
+uniform vec4 BoneMatrices[MAX_BONES * 3];
+
+uniform vec4 LightDirectionAndbDirectional;
+
+attribute vec4 Position;
+attribute vec2 TexCoords0;
+attribute vec4 BlendWeight;
+attribute vec4 BlendIndices;
+attribute vec4 TangentZ;
+
+varying vec2 UVBase;
+varying lowp vec3 FinalLightingColor;
+
+void main()
+{
+	// compute the bone matrix
+	ivec4 BlendIndicesInt = ivec4(BlendIndices);
+	vec4 BoneMatR0 = BoneMatrices[BlendIndicesInt.x * 3 + 0] * BlendWeight.x;
+	vec4 BoneMatR1 = BoneMatrices[BlendIndicesInt.x * 3 + 1] * BlendWeight.x;
+	vec4 BoneMatR2 = BoneMatrices[BlendIndicesInt.x * 3 + 2] * BlendWeight.x;
+
+	BoneMatR0 += BoneMatrices[BlendIndicesInt.y * 3 + 0] * BlendWeight.y;
+	BoneMatR1 += BoneMatrices[BlendIndicesInt.y * 3 + 1] * BlendWeight.y;
+	BoneMatR2 += BoneMatrices[BlendIndicesInt.y * 3 + 2] * BlendWeight.y;
+
+	BoneMatR0 += BoneMatrices[BlendIndicesInt.z * 3 + 0] * BlendWeight.z;
+	BoneMatR1 += BoneMatrices[BlendIndicesInt.z * 3 + 1] * BlendWeight.z;
+	BoneMatR2 += BoneMatrices[BlendIndicesInt.z * 3 + 2] * BlendWeight.z;
+
+	BoneMatR0 += BoneMatrices[BlendIndicesInt.w * 3 + 0] * BlendWeight.w;
+	BoneMatR1 += BoneMatrices[BlendIndicesInt.w * 3 + 1] * BlendWeight.w;
+	BoneMatR2 += BoneMatrices[BlendIndicesInt.w * 3 + 2] * BlendWeight.w;
+
+	// combine LocalToWorld with the transposed BoneMat (which was flipped for mat4x3 action)
+	mat4 BoneToWorld = LocalToWorld * mat4(
+		BoneMatR0[0], BoneMatR1[0], BoneMatR2[0], 0.0,
+		BoneMatR0[1], BoneMatR1[1], BoneMatR2[1], 0.0,
+		BoneMatR0[2], BoneMatR1[2], BoneMatR2[2], 0.0,
+		BoneMatR0[3], BoneMatR1[3], BoneMatR2[3], 1.0
+		);
+
+	// calculate position in world space and put it into view space
+	vec4 VertWorldPos = BoneToWorld * Position;
+	gl_Position = ViewProjection * VertWorldPos;
+
+	// transform the normal with just the rotation part out of the matrix
+	vec3 VertNormal = normalize(mat3(BoneToWorld) * ((TangentZ.xyz/vec3(127.5)) - vec3(1.0)) );
+
+	// calculate how much of the sky colors to use (normal.z, -1 = all lower, 1 = all upper, 0 = 50/50)
+	lowp vec3 SkyColor = mix(LowerSkyColor.xyz, UpperSkyColor.xyz, VertNormal.z * 0.5 + 0.5);
+
+	// calculate how much the directional light affects this fragment
+	lowp vec3 LightColor = LightColorAndFalloffExponent.xyz * 
+		max(0.0, dot(LightDirectionAndbDirectional.xyz, VertNormal));
+
+	// add silhouette brightening
+	vec3 Eye = normalize( CameraWorldPosition.xyz - VertWorldPos.xyz );
+	float Silhouette = 1.0 - abs( dot( Eye, VertNormal ) );
+	float Dist = length( CameraWorldPosition.xyz - VertWorldPos.xyz );
+	float Exponent = 2.0 - min( Dist / 500.0, 1.3 );
+	
+
+	// get both colors out of linear space
+	FinalLightingColor = pow((LightColor + SkyColor), vec3(1.0/2.2)) + 0.85 * vec3( pow( Silhouette, Exponent ) );
+	//FinalLightingColor = vec3( pow( Silhouette, Exponent ) );
+	// pass along the UVs unchanged
+	UVBase = TexCoords0;
+}

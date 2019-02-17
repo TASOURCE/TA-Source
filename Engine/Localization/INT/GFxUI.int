@@ -1,0 +1,31 @@
+; SAMPLE GFxUI.int.
+;
+; DO NOT MODIFY THIS FILE in Engine/Localization
+; YOU WILL BREAK ALL GAMES
+; BECAUSE .INT FILE ARE NOT INHERITED.
+;
+;
+; Copy this file to your Game/Localization/INT/
+; before uncommenting or teaking it.
+;
+;
+;
+;
+;[FontLib]
+;FontLib=fonts_en.fonts_en
+;
+;[Fonts]
+TitleFont=Myriad Pro,Regular
+;NormalFont=GFx33Tests.CalibriDFA8
+SmallFont=Myriad Pro,Regular
+;IMELanguageBar=Arial Unicode MS
+;IMESample=Arial Unicode MS
+;
+;[IME]
+;
+;[Translation]
+;Enable=1
+;
+;[Global]
+;No Trigger=No Trigger!
+

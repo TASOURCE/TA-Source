@@ -1,0 +1,14 @@
+/**
+ * Copyright 1998-2010 Epic Games, Inc. All Rights Reserved.
+ */
+
+uniform sampler2D TextureBase;
+
+varying vec2 UVBase;
+
+void main()
+{
+    vec4 BaseColor = texture2D(TextureBase, UVBase);
+    gl_FragColor = BaseColor;
+}
+

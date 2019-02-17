@@ -1,0 +1,144 @@
+/*=============================================================================
+	BokehDOF.usf: Shader for rendering post processing depth of field.
+	Copyright 1998-2011 Epic Games, Inc. All Rights Reserved.
+=============================================================================*/
+#include "PostProcessCommon.usf"
+#include "DepthOfFieldCommon.usf"
+
+struct GS_IN
+{
+	float2 PixelPos : TEXCOORD0;
+	float4 Position : POSITION;
+};
+
+struct GS_OUT
+{
+	float2 PixelPos : TEXCOORD0;
+	float4 Debug : TEXCOORD1;
+	float4 Position : POSITION;
+};
+
+void CopyVertex(out GS_OUT Out, in GS_IN In)
+{
+	Out.PixelPos = In.PixelPos;
+	Out.Debug = 0;
+	Out.Position = In.Position;
+}
+
+
+// for PS and GS
+sampler2D	LowResSceneBufferPoint;
+
+/*=============================================================================
+ * Geometry shader
+ =============================================================================*/
+[maxvertexcount(4)]
+void MainGeometryShader(triangle GS_IN input[3], inout TriangleStream<GS_OUT> TriStream )
+{
+	GS_OUT Out;
+
+	// needs to align with the C++ side
+	const uint TileSize = 4;
+
+	float2 HalfResUV = input[0].PixelPos;
+
+	float4 FocusedSceneColorAndDepth = tex2Dlod(LowResSceneBufferPoint, float4(HalfResUV, 0, 0));
+
+	bool bMotionBlurObject;
+
+	// bring from texture usable range to worldspace range
+	float Depth = DecompressSceneDepthFromHalfResTextureChannel(FocusedSceneColorAndDepth.a, bMotionBlurObject);
+
+	float Scale = 2.0f*CalcUnfocusedPercent(Depth);
+//	float Scale = (2 - 80*abs(0.00001f * FocusedSceneColorAndDepth.a));
+//	float Scale = (2 - 80*abs(0.00001f * FocusedSceneColorAndDepth.a));
+
+	float Luminance = dot(FocusedSceneColorAndDepth.rgb, 1.0f);
+
+	if(Luminance<0.2f)
+	{
+		Scale = 0;
+	}
+
+	if(Scale > 0)
+	{
+		float2 UVPosition = input[2].Position.xy - input[0].Position.xy;
+		float2 MidPosition = input[0].Position.xy + UVPosition * 0.5f;
+
+		float2 UVPixelPos = input[2].PixelPos.xy - input[0].PixelPos.xy;
+		float2 MidPixelPos = input[0].PixelPos.xy + UVPixelPos * 0.5f;
+
+		CopyVertex(Out, input[0]);
+		Out.Position.xy = MidPosition + float2(-1, -1) * UVPosition * Scale;
+		Out.PixelPos.xy = MidPixelPos + float2(-1, -1) * UVPixelPos;
+		Out.Debug = float4(-1, -1, 1, 0) * TileSize * Scale;
+		TriStream.Append(Out);
+
+		CopyVertex(Out, input[1]);
+		Out.Position.xy = MidPosition + float2(1, -1) * UVPosition * Scale;
+		Out.PixelPos.xy = MidPixelPos + float2(1, -1) * UVPixelPos;
+		Out.Debug = float4( 1, -1, 1, 0) * TileSize * Scale;
+		TriStream.Append(Out);
+
+		CopyVertex(Out, input[2]);
+		Out.Position.xy = MidPosition + float2(-1, 1) * UVPosition * Scale;
+		Out.PixelPos.xy = MidPixelPos + float2(-1, 1) * UVPixelPos;
+		Out.Debug = float4(-1,  1, 1, 0) * TileSize * Scale;
+		TriStream.Append(Out);
+
+		CopyVertex(Out, input[0]);
+		Out.Position.xy = MidPosition + float2(1, 1) * UVPosition * Scale;
+		Out.PixelPos.xy = MidPixelPos + float2(1, 1) * UVPixelPos;
+		Out.Debug = float4(1, 1, 1, 0) * TileSize * Scale;
+		TriStream.Append(Out);
+
+		TriStream.RestartStrip();
+	}
+}
+
+
+/*=============================================================================
+ * Vertex shader
+ =============================================================================*/
+void MainVS(
+	float2 InPosition		: POSITION,
+	float2 InUV				: TEXCOORD0,
+	out float2 OutUV		: TEXCOORD0,
+	out float4 OutPosition	: POSITION
+	)
+{
+	OutPosition = float4( InPosition, 0, 1 );
+    OutUV = InUV;
+}
+
+
+/*=============================================================================
+ * Pixel shader
+ =============================================================================*/
+void MainPS(float2 InUV : TEXCOORD0, float4 Debug : TEXCOORD1, out float4 OutColor : COLOR0)
+{
+	float2 HalfResUV = InUV; 
+	float4 FocusedSceneColorAndDepth = tex2D(LowResSceneBufferPoint, HalfResUV);
+
+	float CircleDist = length(Debug.xy);
+
+	// 1.0 = normal, 0.2 = blurry
+//	float BigBokehGetBlurry = 1.0f - Debug.z/10;
+	float BigBokehGetBlurry = 1.0f;
+
+	float Mask = 1 - saturate((CircleDist - Debug.z) * BigBokehGetBlurry + 1);
+
+	// small ones don't look good with the low grid resolution so we fade them out (should be done by gathering)
+	Mask *= saturate(Debug.z - 3);
+
+	float BrightnessTweakfactor = 10.0f;
+
+	// the bigger the circle gets the dimmer the single pixel become 
+	Mask *= BrightnessTweakfactor / Square(Debug.z);
+
+	//	OutColor = float4(0, FocusedSceneColorAndDepth.b, 1, 0);
+	OutColor = float4(FocusedSceneColorAndDepth.rgb, 0) * Mask;
+//	OutColor = float4(FocusedSceneColorAndDepth.rgb, 0) * float4(Debug.rgb, 1);
+//	OutColor = float4(Debug.rgb, 0);
+//	OutColor = float4(1,1,0, 0);
+}

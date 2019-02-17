@@ -1,0 +1,19 @@
+/**
+ * Copyright 1998-2010 Epic Games, Inc. All Rights Reserved.
+ */
+
+uniform sampler2D TextureBase;
+
+varying vec2 UVBase;
+varying lowp vec3 FinalLightingColor;
+
+void main()
+{
+    lowp vec4 BaseColor = texture2D(TextureBase, UVBase);
+
+	ALPHAKILL(BaseColor.w)
+
+    gl_FragColor.xyz = FinalLightingColor * BaseColor.xyz;
+    gl_FragColor.w = BaseColor.w;
+}
+
